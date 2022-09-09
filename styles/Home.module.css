@@ -127,3 +127,18 @@
     filter: invert(1);
   }
 }
+
+.specialDay {
+  background-color: #96191918;
+  color: #961919;
+}
+
+.holiday {
+  color: #961919;
+  font-weight: 600;
+}
+
+.event {
+  background-color: #96f7be;
+  color: rgb(57, 58, 58);
+}

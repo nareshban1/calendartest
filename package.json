@@ -9,9 +9,17 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fullcalendar/daygrid": "^5.11.3",
+    "@types/react-big-calendar": "^0.38.1",
+    "bootstrap": "^5.2.1",
+    "moment": "^2.29.4",
     "next": "12.3.0",
+    "node-sass": "^7.0.3",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-big-calendar": "^1.5.0",
+    "react-bootstrap": "^2.5.0",
+    "react-dom": "18.2.0",
+    "sass": "^1.54.9"
   },
   "devDependencies": {
     "@types/node": "18.7.16",

@@ -1,3 +1,5 @@
+
+
 html,
 body {
   padding: 0;
@@ -23,4 +25,21 @@ a {
     color: white;
     background: black;
   }
+}
+
+.calendar{
+  font-family: 'poppins';
+}
+
+.rbc-toolbar{
+  display: flex !important;
+}
+
+.rbc-toolbar-label{
+  order: 1;
+  text-align: left !important;
+}
+
+.rbc-btn-group{
+  order: 2;
 }

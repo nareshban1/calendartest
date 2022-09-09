@@ -1,9 +1,101 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
+
 import styles from '../styles/Home.module.css'
 
+import { Calendar, momentLocalizer, Views } from 'react-big-calendar'
+import moment from 'moment';
+import { useMemo, useState } from 'react'
+import EventInfoModal from '../components/modal/EventInfoModal'
+
+let date = new Date("2022-09-30");
+
+date.setDate(date.getDate() + 5)
+export const events = [
+  {
+    id: 0,
+    title: 'All Day Event very long title',
+    allDay: true,
+    start: new Date("2022-09-30"),
+    end: date,
+  },
+  {
+    id: 1,
+    title: 'Long Event',
+    start: new Date(),
+    end: new Date(),
+  },
+  {
+    id: 2,
+    title: 'Long Event',
+    start: new Date(),
+    end: new Date(),
+  },
+  {
+    id: 3,
+    title: 'Long Event',
+    start: new Date(),
+    end: new Date(),
+  },
+]
+
 const Home: NextPage = () => {
+  const localizer = momentLocalizer(moment)
+  const handleSelectSlot = (data: any) => {
+    console.log(data)
+    console.log(data?.slots[0])
+    setSelectedDate(data)
+    toggleDate()
+  }
+
+  const handleSelectEvent = (event: any) => {
+    console.log(event)
+    setSelectedEvent(event)
+    toggle()
+  }
+
+
+  const [show, setShow] = useState(false);
+  const [showDate, setShowDate] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const toggle = () => setShow(!show);
+  const toggleDate = () => setShowDate(!showDate);
+
+  const customDayPropGetter = (date) => {
+    if (date.getDay() === 6)
+      return {
+        className: styles.specialDay,
+      }
+    else return {}
+  }
+
+  const customEventPropGetter = (event) => {
+      return {
+        className: styles.event,
+      }
+  }
+
+  const HeaderCellContent = (props: any) => {
+    const { date } = props;
+    const dayOfWeek = date.getDay();
+    const className = dayOfWeek === 6 ? styles.holiday : "";
+    return (
+      <span className={className}>
+        {props.label}
+      </span>
+    )
+
+
+  };
+
+  const components = useMemo(() => ({
+    month: {
+      dateHeader: HeaderCellContent,
+    }
+  }), [])
+
   return (
     <div className={styles.container}>
       <Head>
@@ -13,57 +105,46 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+        <EventInfoModal show={show}
+          toggle={toggle}
+          modalHeading={selectedEvent?.title}
+          modalBody={
+            <>
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.tsx</code>
-        </p>
+            </>
+          }
+        />
+        <EventInfoModal show={showDate}
+          toggle={toggleDate}
+          modalHeading={moment(new Date(selectedDate?.slots[0])).format('YYYY/MM/DD')}
+          modalBody={
+            <>
 
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+            </>
+          }
+        />
+        <div className="myCustomHeight calendar">
+          <Calendar
+            defaultView={Views.MONTH}
+            view={Views.MONTH}
+            localizer={localizer}
+            events={events}
+            onSelectEvent={handleSelectEvent}
+            onSelectSlot={handleSelectSlot}
+            selectable
+            tooltipAccessor={"title"}
+            style={{ height: 800, width: 800 }}
+            views={['month']}
+            popup
+            dayPropGetter={customDayPropGetter}
+            eventPropGetter={customEventPropGetter}
+            components={components}
+          />
         </div>
       </main>
 
       <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
+
       </footer>
     </div>
   )
